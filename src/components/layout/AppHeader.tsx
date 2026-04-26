@@ -53,7 +53,7 @@ export function AppHeader() {
           </Link>
           {isLoggedIn && (
             <Link href="/guesses" className="transition-colors hover:text-white">
-              Meus Palpites
+              Palpites
             </Link>
           )}
           <Link href="/regulamento" className="transition-colors hover:text-white">
@@ -129,7 +129,7 @@ export function AppHeader() {
                 className="flex w-full items-center justify-center rounded border border-gray-700 bg-black px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Meus Palpites
+                Palpites
               </Link>
             )}
             <Link

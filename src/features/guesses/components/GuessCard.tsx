@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { CiTimer } from 'react-icons/ci';
 import { Match } from '@/services/match/match.types';
 import { MdBlock } from 'react-icons/md';
@@ -24,6 +27,9 @@ export function GuessCard({
   stadium,
   onSaved,
 }: GuessCardProps) {
+  const [showSavedMessage, setShowSavedMessage] = useState(false);
+  const [savedMessage, setSavedMessage] = useState('Palpite salva com sucesso!');
+  const isClosed = match.status === 'Finalizado';
   const matchDate = new Date(match.matchDate);
   const bettingDeadline = new Date(matchDate.getTime() - 60 * 60 * 1000);
   const bettingDeadlineDate = bettingDeadline.toLocaleDateString('pt-BR', {
@@ -41,31 +47,76 @@ export function GuessCard({
       ? {
           className: 'border-green-300 bg-green-100 text-green-900',
           icon: CiTimer,
-          message: `Ativo - Aposte ate dia ${bettingDeadlineDate} as ${bettingDeadlineTime}.`,
+          message: `Ativo até ${bettingDeadlineDate} as ${bettingDeadlineTime}`,
         }
       : match.status === 'Live'
         ? {
             className: 'border-green-300 bg-gray-300 text-gray-900',
             icon: MdBlock,
-            message: 'Live - A partida esta em andamento',
+            message: 'Encerrado - A partida está em andamento',
           }
         : {
             className: 'border-red-300 bg-red-100 text-red-900',
             icon: SlClose,
-            message: 'Finalizado - As apostas para este jogo se encerraram.',
+            message: 'Encerrado - A partida foi finalizada',
           };
 
   const StatusIcon = statusConfig.icon;
+  const articleClassName = guess
+    ? 'matchInfo rounded-lg border border-green-100 bg-green-900 p-4'
+    : isClosed
+      ? 'matchInfo rounded-lg border border-red-100 bg-red-900 p-4'
+      : 'matchInfo rounded-lg border border-gray-100 bg-gray-900 p-4';
+
+  useEffect(() => {
+    if (!showSavedMessage) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setShowSavedMessage(false);
+    }, 5000);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [showSavedMessage]);
+
+  function handleSaved(mode: 'created' | 'updated') {
+    const currentTime = new Date().toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+
+    setSavedMessage(
+      mode === 'updated'
+        ? `Atualizado as ${currentTime}`
+        : `Salva as ${currentTime}`,
+    );
+    setShowSavedMessage(true);
+    onSaved();
+  }
 
   return (
-    <article className="matchInfo rounded-lg border border-gray-500 bg-black p-4">
-      <div
-        className={`matchStatus flex w-full items-start gap-2 rounded border px-3 py-2 ${statusConfig.className}`}
-      >
-        <StatusIcon className="mt-0.5 shrink-0 text-base" />
-        <div className="text-sm">
-          <span className="status font-bold uppercase">{statusConfig.message}</span>
+    <article className={articleClassName}>
+      <div className="relative">
+        <div
+          className={`matchStatus flex w-full items-start gap-2 rounded border px-3 py-2 ${statusConfig.className}`}
+        >
+          <StatusIcon className="mt-0.5 shrink-0 text-base" />
+          <div className="text-sm">
+            <span className="status font-bold uppercase">{statusConfig.message}</span>
+          </div>
         </div>
+        {showSavedMessage && (
+          <div className="absolute inset-0 flex w-full items-start gap-2 rounded border border-green-300 bg-green-100 px-3 py-2 text-green-900">
+            <CiTimer className="mt-0.5 shrink-0 text-base" />
+            <div className="text-sm">
+              <span className="status font-bold uppercase">{savedMessage}</span>
+            </div>
+          </div>
+        )}
       </div>
       <div className="text-center text-sm text-gray-500">
         <div className="location mt-3 text-center text-sm text-gray-100">
@@ -102,7 +153,13 @@ export function GuessCard({
         </div>
       </div>
 
-      <GuessForm matchId={match._id} guess={guess} onSaved={onSaved} />
+      <GuessForm
+        matchId={match._id}
+        guess={guess}
+        disabled={isClosed}
+        variant={isClosed ? 'closed' : guess ? 'saved' : 'default'}
+        onSaved={handleSaved}
+      />
     </article>
   );
 }

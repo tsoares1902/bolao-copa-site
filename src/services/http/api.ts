@@ -1,4 +1,9 @@
-import { getAccessToken } from './token-storage';
+import {
+  clearTokens,
+  getAccessToken,
+  getRefreshToken,
+  setTokens,
+} from './token-storage';
 
 type ApiRequestOptions = RequestInit & {
   auth?: boolean;
@@ -6,9 +11,43 @@ type ApiRequestOptions = RequestInit & {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+type RefreshTokenResponse = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+async function refreshAccessToken(): Promise<string | null> {
+  const refreshToken = getRefreshToken();
+
+  if (!refreshToken) {
+    clearTokens();
+    return null;
+  }
+
+  const response = await fetch(`${API_URL}/auth/refresh`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ refreshToken }),
+  });
+
+  if (!response.ok) {
+    clearTokens();
+    return null;
+  }
+
+  const tokens = (await response.json()) as RefreshTokenResponse;
+
+  setTokens(tokens.accessToken, tokens.refreshToken);
+
+  return tokens.accessToken;
+}
+
 async function request<TResponse>(
   path: string,
   options: ApiRequestOptions = {},
+  retryOnAuthError = true,
 ): Promise<TResponse> {
   const headers = new Headers(options.headers);
 
@@ -26,6 +65,26 @@ async function request<TResponse>(
     ...options,
     headers,
   });
+
+  if (response.status === 401 && options.auth !== false && retryOnAuthError) {
+    const nextAccessToken = await refreshAccessToken();
+
+    if (nextAccessToken) {
+      const retryHeaders = new Headers(options.headers);
+
+      retryHeaders.set('Content-Type', 'application/json');
+      retryHeaders.set('Authorization', `Bearer ${nextAccessToken}`);
+
+      return request<TResponse>(
+        path,
+        {
+          ...options,
+          headers: retryHeaders,
+        },
+        false,
+      );
+    }
+  }
 
   if (!response.ok) {
     const error = await response.json().catch(() => null);
