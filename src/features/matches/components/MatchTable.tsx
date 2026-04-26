@@ -1,10 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { MatchRound } from '@/shared/constants/rounds';
+import { useMemo } from 'react';
 import { useMatchResources } from '@/features/matches/hooks/useMatchResources';
 import { groupMatchesByGroup } from '@/features/matches/utils/group-matches-by-group';
-import { groupMatchesByRound } from '@/features/matches/utils/group-matches-by-round';
 import { MatchGroupSection } from '@/features/matches/components/MatchGroupSection';
 
 type MatchTableProps = {
@@ -19,20 +17,14 @@ export function MatchTable({ search = '' }: MatchTableProps) {
     isLoading,
   } = useMatchResources();
 
-  const [selectedRound, setSelectedRound] = useState<MatchRound>('Rodada 1');
-
-  const matchesByRound = useMemo(() => {
-    return groupMatchesByRound(matches);
-  }, [matches]);
-
   const normalizedSearch = search.trim().toLocaleLowerCase('pt-BR');
 
   const filteredMatches = useMemo(() => {
     if (!normalizedSearch) {
-      return matchesByRound[selectedRound];
+      return matches;
     }
 
-    return matchesByRound[selectedRound].filter((match) => {
+    return matches.filter((match) => {
       const homeTeamName = teamsById[match.homeTeamId]?.name ?? '';
       const awayTeamName = teamsById[match.awayTeamId]?.name ?? '';
       const stadiumName = stadiumsById[match.stadiumId]?.name ?? '';
@@ -42,7 +34,7 @@ export function MatchTable({ search = '' }: MatchTableProps) {
         (value) => value.toLocaleLowerCase('pt-BR').includes(normalizedSearch),
       );
     });
-  }, [matchesByRound, normalizedSearch, selectedRound, stadiumsById, teamsById]);
+  }, [matches, normalizedSearch, stadiumsById, teamsById]);
 
   const matchesByGroup = useMemo(() => {
     return groupMatchesByGroup(filteredMatches);
@@ -59,10 +51,10 @@ export function MatchTable({ search = '' }: MatchTableProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="grid grid-cols-1 gap-6 px-4 pb-6 md:grid-cols-2 md:px-6 lg:grid-cols-3">
       {visibleGroups.length === 0 ? (
-        <p className="rounded-lg border border-dashed p-4 text-sm text-gray-500">
-          Nenhum jogo encontrado para {selectedRound}.
+        <p className="rounded-lg border border-dashed p-4 text-sm text-gray-500 md:col-span-2 lg:col-span-3">
+          Nenhum jogo encontrado.
         </p>
       ) : (
         visibleGroups.map(([groupName, groupMatches]) => (
@@ -72,8 +64,6 @@ export function MatchTable({ search = '' }: MatchTableProps) {
             matches={groupMatches}
             teamsById={teamsById}
             stadiumsById={stadiumsById}
-            selectedRound={selectedRound}
-            onChangeRound={setSelectedRound}
           />
         ))
       )}

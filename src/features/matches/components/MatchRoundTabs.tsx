@@ -20,8 +20,8 @@ export function MatchRoundTabs({
           onClick={() => onChangeRound(round)}
           className={
             selectedRound === round
-              ? 'cursor-pointer rounded-md border border-gray-500 bg-gray-300 px-3 py-2 text-gray-500 hover:bg-gray-200'
-              : 'cursor-pointer rounded-md border border-gray-500 bg-white px-3 py-2 text-gray-500 hover:bg-gray-200'
+              ? 'cursor-pointer rounded-md border border-gray-500 bg-gray-300 px-3 py-2 text-gray-900 hover:bg-gray-300'
+              : 'cursor-pointer rounded-md border border-gray-500 bg-black px-3 py-2 text-gray-300 hover:text-gray-900 hover:bg-gray-200'
           }
         >
           {round}

@@ -31,7 +31,9 @@ async function request<TResponse>(
     const error = await response.json().catch(() => null);
 
     throw new Error(
-      error?.message ?? `Request failed with status ${response.status}`,
+      Array.isArray(error?.message)
+        ? error.message.join(', ')
+        : error?.message ?? `Request failed with status ${response.status}`,
     );
   }
 
