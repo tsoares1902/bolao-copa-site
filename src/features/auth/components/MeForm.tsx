@@ -4,12 +4,12 @@ import { FormEvent, useEffect, useState } from 'react';
 import { updateMe } from '@/services/auth/auth.api';
 import { User } from '@/services/auth/auth.types';
 
-type ProfileFormProps = {
+type MeFormProps = {
   user: User;
   onUpdated?: (user: User) => void;
 };
 
-export function ProfileForm({ user, onUpdated }: ProfileFormProps) {
+export function MeForm({ user, onUpdated }: MeFormProps) {
   const [name, setName] = useState(user.name);
   const [alias, setAlias] = useState(user.alias ?? '');
   const [phone, setPhone] = useState(user.phone.number);

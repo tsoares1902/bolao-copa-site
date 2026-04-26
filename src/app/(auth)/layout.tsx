@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { RequireGuest } from '@/features/auth/components/RequireGuest';
 
 type AuthLayoutProps = {
   children: React.ReactNode;
@@ -11,8 +12,10 @@ export const metadata: Metadata = {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-black px-4">
-      {children}
-    </main>
+    <RequireGuest>
+      <main className="flex min-h-screen items-center justify-center bg-black px-4">
+        {children}
+      </main>
+    </RequireGuest>
   );
 }

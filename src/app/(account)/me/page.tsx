@@ -1,9 +1,9 @@
 'use client';
 
-import { ProfileForm } from '@/features/auth/components/ProfileForm';
+import { MeForm } from '@/features/auth/components/MeForm';
 import { useMe } from '@/features/auth/hooks/useMe';
 
-export default function ProfilePage() {
+export default function MePage() {
   const { user, isLoading, reload } = useMe();
 
   if (isLoading) {
@@ -14,5 +14,5 @@ export default function ProfilePage() {
     return <p>Usuário não encontrado.</p>;
   }
 
-  return <ProfileForm user={user} onUpdated={reload} />;
+  return <MeForm user={user} onUpdated={reload} />;
 }
