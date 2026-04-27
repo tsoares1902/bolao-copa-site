@@ -56,6 +56,17 @@ export function AppHeader() {
               Palpites
             </Link>
           )}
+          {isLoggedIn && (
+            <Link href="/ranking" className="transition-colors hover:text-white">
+              Ranking
+            </Link>
+          )}
+        </nav>
+
+        <nav className="ml-auto hidden items-center gap-6 text-sm font-medium text-gray-300 md:flex">
+          <Link href="/faq" className="transition-colors hover:text-white">
+            FAQ
+          </Link>
           <Link href="/regulamento" className="transition-colors hover:text-white">
             Regulamento
           </Link>
@@ -71,7 +82,7 @@ export function AppHeader() {
           {isMobileMenuOpen ? <FiX className="text-xl" /> : <FiMenu className="text-xl" />}
         </button>
 
-        <div className="ml-auto hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-2 md:flex">
           {isLoggedIn ? (
             <>
               <Link
@@ -132,6 +143,22 @@ export function AppHeader() {
                 Palpites
               </Link>
             )}
+            {isLoggedIn && (
+              <Link
+                href="/ranking"
+                className="flex w-full items-center justify-center rounded border border-gray-700 bg-black px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Ranking
+              </Link>
+            )}
+            <Link
+              href="/faq"
+              className="flex w-full items-center justify-center rounded border border-gray-700 bg-black px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              FAQ
+            </Link>
             <Link
               href="/regulamento"
               className="flex w-full items-center justify-center rounded border border-gray-700 bg-black px-3 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"

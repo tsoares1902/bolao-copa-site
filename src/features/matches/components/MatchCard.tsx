@@ -1,8 +1,12 @@
-import { CiTimer } from 'react-icons/ci';
-import { GiCoinflip } from 'react-icons/gi';
+'use client';
+
+import Link from 'next/link';
+import { useState } from 'react';
+import { FaCoins } from 'react-icons/fa';
+import { IoMdClose } from 'react-icons/io';
+import { MdOutlineStadium } from 'react-icons/md';
+import { GuessScoreInput } from '@/features/guesses/components/GuessScoreInput';
 import { Match } from '@/services/match/match.types';
-import { MdBlock } from 'react-icons/md';
-import { SlClose } from 'react-icons/sl';
 import { Stadium } from '@/services/stadium/stadium.types';
 import { Team } from '@/services/team/team.types';
 
@@ -19,10 +23,23 @@ export function MatchCard({
   awayTeam,
   stadium,
 }: MatchCardProps) {
+  const [isStadiumModalOpen, setIsStadiumModalOpen] = useState(false);
+  const [homeScore, setHomeScore] = useState(match.homeTeamScore ?? 0);
+  const [awayScore, setAwayScore] = useState(match.awayTeamScore ?? 0);
   const matchDate = new Date(match.matchDate);
+  const articleStyle = stadium?.midia.photoUrl
+    ? {
+        backgroundImage: `linear-gradient(rgba(10, 10, 10, 0.76), rgba(10, 10, 10, 0.82)), url(${stadium.midia.photoUrl})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+      }
+    : undefined;
 
   return (
-    <article className="matchInfo rounded-lg border border-gray-500 bg-black p-4">
+    <article
+      className="matchInfo rounded-lg border border-gray-500 bg-black p-4"
+      style={articleStyle}
+    >
       <div className="text-center text-sm text-gray-500">
         <div className="location mt-3 text-center text-sm text-gray-100">
           <strong>{stadium?.name}</strong> - <strong>{stadium?.city}</strong>
@@ -45,7 +62,9 @@ export function MatchCard({
         </div>
 
         <div className="scores flex items-center justify-center gap-2">
+          <GuessScoreInput value={homeScore} onChange={setHomeScore} />
           <span className="font-bold leading-none text-gray-100">x</span>
+          <GuessScoreInput value={awayScore} onChange={setAwayScore} />
         </div>
 
         <div className="awayTeamInfo">
@@ -59,6 +78,64 @@ export function MatchCard({
           </div>
         </div>
       </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-3">
+        <button
+          type="button"
+          onClick={() => setIsStadiumModalOpen(true)}
+          disabled={!stadium}
+          className="flex cursor-pointer items-center justify-start gap-2 rounded border border-white/70 bg-black/60 px-3 py-2 text-sm font-bold text-white transition hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <MdOutlineStadium className="shrink-0 text-lg" />
+          <span>{stadium ? 'Estadio' : 'Indisponivel'}</span>
+        </button>
+
+        <Link
+          href="/guesses"
+          className="flex cursor-pointer items-center justify-start gap-2 rounded border border-white/70 bg-black/60 px-3 py-2 text-sm font-bold text-white transition hover:bg-gray-700"
+        >
+          <FaCoins className="shrink-0 text-base" />
+          <span>Palpites</span>
+        </Link>
+      </div>
+
+      {isStadiumModalOpen && stadium && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
+          <div className="w-full max-w-3xl overflow-hidden rounded-lg border border-gray-700 bg-black">
+            <div className="flex items-start justify-between gap-4 p-4 text-white">
+              <h3 className="text-3xl font-black tracking-wide">{stadium.name}</h3>
+              <button
+                type="button"
+                onClick={() => setIsStadiumModalOpen(false)}
+                className="shrink-0 text-white transition hover:text-gray-300"
+                aria-label="Fechar modal do estadio"
+              >
+                <IoMdClose className="text-3xl" />
+              </button>
+            </div>
+            <div
+              className="h-72 w-full bg-cover bg-center md:h-96"
+              style={{ backgroundImage: `url(${stadium.midia.photoUrl})` }}
+            />
+            <div className="space-y-3 p-4 text-white">
+              <p className="text-xl font-semibold text-white">{stadium.city}</p>
+              <p className="text-sm text-gray-300">
+                Capacidade: {stadium.capacity?.toLocaleString('pt-BR') ?? 'Nao informada'}
+              </p>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsStadiumModalOpen(false)}
+                  className="flex items-center justify-start gap-2 rounded border border-white px-3 py-2 text-sm font-bold text-white transition hover:bg-white hover:text-black"
+                >
+                  <IoMdClose className="text-lg" />
+                  <span>Fechar</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </article>
   );
 }

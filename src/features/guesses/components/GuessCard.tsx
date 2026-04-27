@@ -10,6 +10,33 @@ import { Team } from '@/services/team/team.types';
 import { Guess } from '@/services/guess/guess.types';
 import { GuessForm } from './GuessForm';
 
+type GuessCardVisualState = 'needs_guess' | 'has_guess' | 'locked_without_guess';
+
+const GUESS_CARD_VISUALS: Record<
+  GuessCardVisualState,
+  {
+    articleClassName: string;
+    formVariant: 'default' | 'saved' | 'closed';
+    isFormDisabled: boolean;
+  }
+> = {
+  needs_guess: {
+    articleClassName: 'matchInfo rounded-lg border border-white bg-gray-900 p-4',
+    formVariant: 'default',
+    isFormDisabled: false,
+  },
+  has_guess: {
+    articleClassName: 'matchInfo rounded-lg border border-gray-800 bg-gray-900 p-4',
+    formVariant: 'saved',
+    isFormDisabled: false,
+  },
+  locked_without_guess: {
+    articleClassName: 'matchInfo rounded-lg border border-red-800 bg-gray-900 p-4',
+    formVariant: 'closed',
+    isFormDisabled: true,
+  },
+};
+
 type GuessCardProps = {
   match: Match;
   guess?: Guess;
@@ -29,7 +56,7 @@ export function GuessCard({
 }: GuessCardProps) {
   const [showSavedMessage, setShowSavedMessage] = useState(false);
   const [savedMessage, setSavedMessage] = useState('Palpite salva com sucesso!');
-  const isClosed = match.status === 'Finalizado';
+  const isLocked = match.status === 'Live' || match.status === 'Finalizado';
   const matchDate = new Date(match.matchDate);
   const bettingDeadline = new Date(matchDate.getTime() - 60 * 60 * 1000);
   const bettingDeadlineDate = bettingDeadline.toLocaleDateString('pt-BR', {
@@ -59,14 +86,22 @@ export function GuessCard({
             className: 'border-red-300 bg-red-100 text-red-900',
             icon: SlClose,
             message: 'Encerrado - A partida foi finalizada',
-          };
+        };
 
+  const visualState: GuessCardVisualState = guess
+    ? 'has_guess'
+    : isLocked
+      ? 'locked_without_guess'
+      : 'needs_guess';
+  const visualConfig = GUESS_CARD_VISUALS[visualState];
   const StatusIcon = statusConfig.icon;
-  const articleClassName = guess
-    ? 'matchInfo rounded-lg border border-green-100 bg-green-900 p-4'
-    : isClosed
-      ? 'matchInfo rounded-lg border border-red-100 bg-red-900 p-4'
-      : 'matchInfo rounded-lg border border-gray-100 bg-gray-900 p-4';
+  const articleStyle = stadium?.midia.photoUrl
+    ? {
+        backgroundImage: `linear-gradient(rgba(10, 10, 10, 0.76), rgba(10, 10, 10, 0.82)), url(${stadium.midia.photoUrl})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+      }
+    : undefined;
 
   useEffect(() => {
     if (!showSavedMessage) {
@@ -99,7 +134,7 @@ export function GuessCard({
   }
 
   return (
-    <article className={articleClassName}>
+    <article className={visualConfig.articleClassName} style={articleStyle}>
       <div className="relative">
         <div
           className={`matchStatus flex w-full items-start gap-2 rounded border px-3 py-2 ${statusConfig.className}`}
@@ -156,8 +191,8 @@ export function GuessCard({
       <GuessForm
         matchId={match._id}
         guess={guess}
-        disabled={isClosed}
-        variant={isClosed ? 'closed' : guess ? 'saved' : 'default'}
+        disabled={visualConfig.isFormDisabled}
+        variant={visualConfig.formVariant}
         onSaved={handleSaved}
       />
     </article>

@@ -53,9 +53,14 @@ export function MatchTable({ search = '' }: MatchTableProps) {
   return (
     <div className="grid grid-cols-1 gap-6 px-4 pb-6 md:grid-cols-2 md:px-6 lg:grid-cols-3">
       {visibleGroups.length === 0 ? (
-        <p className="rounded-lg border border-dashed p-4 text-sm text-gray-500 md:col-span-2 lg:col-span-3">
-          Nenhum jogo encontrado.
-        </p>
+        <div className="rounded-lg border border-dashed p-4 text-sm text-gray-500 md:col-span-2 lg:col-span-3">
+          <p>Não existem informações com estes nomes, você pode buscar por:</p>
+          <ul className="mt-2 list-disc pl-5">
+            <li>Nome de seleção / país</li>
+            <li>Nome de estádio</li>
+            <li>Nome da cidade da partida.</li>
+          </ul>
+        </div>
       ) : (
         visibleGroups.map(([groupName, groupMatches]) => (
           <MatchGroupSection

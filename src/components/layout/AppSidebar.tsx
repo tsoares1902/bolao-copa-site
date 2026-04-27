@@ -17,7 +17,9 @@ export function AppSidebar() {
       <nav className="flex flex-col gap-4">
         <Link href="/matches">Tabela de Jogos</Link>
         {isLoggedIn && <Link href="/guesses">Meus Palpites</Link>}
-        <Link href="/ranking">Ranking</Link>
+        {isLoggedIn && <Link href="/ranking">Ranking</Link>}
+        <Link href="/faq">FAQ</Link>
+        <Link href="/regulamento">Regulamento</Link>
         <Link href="/profile">Meu Perfil</Link>
       </nav>
     </aside>

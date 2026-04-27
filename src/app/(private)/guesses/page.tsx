@@ -3,20 +3,20 @@
 import { useState } from 'react';
 
 import { SearchBar } from '@/components/form/SearchBar';
-import { MatchTable } from '@/features/matches/components/MatchTable';
+import { GuessTable } from '@/features/guesses/components/GuessTable';
 
-export default function MatchesPage() {
+export default function GuessesPage() {
   const [search, setSearch] = useState('');
 
   return (
     <div className="min-h-screen bg-black">
       <div className="px-4 pt-6 md:px-6">
         <h1 className="mb-6 text-center text-2xl font-bold text-gray-300">
-          TABELA DE JOGOS
+          MEUS PALPITES
         </h1>
         <form className="space-y-6">
           <SearchBar
-            id="jobs-search-title"
+            id="guesses-search-title"
             value={search}
             onChange={setSearch}
             placeholder="Brasil, Met Life, Nova York..."
@@ -24,8 +24,8 @@ export default function MatchesPage() {
 
           <div className="border-t border-gray-700" />
         </form>
+        <GuessTable search={search} />
       </div>
-      <MatchTable search={search} />
     </div>
   );
 }

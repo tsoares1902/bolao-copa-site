@@ -67,14 +67,14 @@ export function GuessForm({
           value={homeScore}
           onChange={setHomeScore}
           disabled={disabled}
-          variant={isClosed ? 'closed' : 'default'}
+          variant={isClosed ? 'closed' : isSaved ? 'saved' : 'default'}
         />
         <span className="font-bold leading-none text-gray-100">x</span>
         <GuessScoreInput
           value={awayScore}
           onChange={setAwayScore}
           disabled={disabled}
-          variant={isClosed ? 'closed' : 'default'}
+          variant={isClosed ? 'closed' : isSaved ? 'saved' : 'default'}
         />
       </div>
 
@@ -84,10 +84,10 @@ export function GuessForm({
           disabled={disabled || isSubmitting}
           className={`flex items-center justify-center gap-2 rounded px-3 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-100 ${
             isClosed
-              ? 'border border-gray-100 bg-red-900 text-gray-100'
+              ? 'border border-red-800 bg-green-900 text-green-100'
               : isSaved
-                ? 'border border-green-300 bg-green-100 text-green-900 hover:bg-green-200'
-                : 'border border-green-100 bg-green-800 text-green-100 hover:bg-green-600'
+                ? 'border border-gray-800 bg-green-900 text-green-100 hover:bg-green-800'
+                : 'border border-white bg-green-900 text-green-100 hover:bg-green-800'
           }`}
         >
           <FaRegSave className="shrink-0 text-base" />
