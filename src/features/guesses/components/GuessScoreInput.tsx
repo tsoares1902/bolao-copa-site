@@ -4,6 +4,7 @@ type GuessScoreInputProps = {
   value: number;
   onChange: (value: number) => void;
   disabled?: boolean;
+  hideControls?: boolean;
   variant?: 'default' | 'saved' | 'closed';
 };
 
@@ -11,6 +12,7 @@ export function GuessScoreInput({
   value,
   onChange,
   disabled = false,
+  hideControls = false,
   variant = 'default',
 }: GuessScoreInputProps) {
   function handleDecrement() {
@@ -31,15 +33,17 @@ export function GuessScoreInput({
 
   return (
     <div className="flex items-center gap-2">
-      <button
-        type="button"
-        onClick={handleDecrement}
-        disabled={disabled}
-        className="text-white transition hover:text-gray-200 disabled:cursor-not-allowed disabled:text-white"
-        aria-label="Diminuir placar"
-      >
-        <CiCircleMinus className="text-2xl leading-none" />
-      </button>
+      {!hideControls && (
+        <button
+          type="button"
+          onClick={handleDecrement}
+          disabled={disabled}
+          className="text-white transition hover:text-gray-200 disabled:cursor-not-allowed disabled:text-white"
+          aria-label="Diminuir placar"
+        >
+          <CiCircleMinus className="text-2xl leading-none" />
+        </button>
+      )}
       <input
         type="number"
         min={0}
@@ -48,15 +52,17 @@ export function GuessScoreInput({
         onChange={(event) => onChange(Math.max(0, Number(event.target.value)))}
         className="h-10 w-10 appearance-none rounded border border-white text-center text-sm leading-none font-bold text-white [moz-appearance:textfield] disabled:cursor-not-allowed disabled:border-white disabled:text-white [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
       />
-      <button
-        type="button"
-        onClick={handleIncrement}
-        disabled={disabled}
-        className="text-white transition hover:text-gray-200 disabled:cursor-not-allowed disabled:text-white"
-        aria-label="Aumentar placar"
-      >
-        <CiCirclePlus className="text-2xl leading-none" />
-      </button>
+      {!hideControls && (
+        <button
+          type="button"
+          onClick={handleIncrement}
+          disabled={disabled}
+          className="text-white transition hover:text-gray-200 disabled:cursor-not-allowed disabled:text-white"
+          aria-label="Aumentar placar"
+        >
+          <CiCirclePlus className="text-2xl leading-none" />
+        </button>
+      )}
     </div>
   );
 }

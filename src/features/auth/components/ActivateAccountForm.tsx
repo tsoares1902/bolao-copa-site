@@ -57,7 +57,7 @@ export function ActivateAccountForm() {
       });
 
       setTimeout(() => {
-        router.push('/account/sign-in');
+        router.push('/sign-in');
       }, 800);
     } catch {
       setFeedback({

@@ -26,7 +26,7 @@ export function GuessGroupSection({
   const matchesByRound = groupMatchesByRound(matches);
 
   return (
-    <section className="rounded-lg border border-gray-100 bg-black p-4">
+    <section className="rounded-lg border border-gray-500 bg-black p-4">
       <h2 className="text-xl font-semibold uppercase text-center text-gray-300">{groupName}</h2>
       <div className="mt-4 space-y-6">
         {MATCH_ROUNDS.map((round) => {

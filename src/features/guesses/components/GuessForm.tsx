@@ -82,11 +82,11 @@ export function GuessForm({
         <button
           type="submit"
           disabled={disabled || isSubmitting}
-          className={`flex items-center justify-center gap-2 rounded px-3 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-100 ${
+          className={`flex cursor-pointer items-center justify-center gap-2 rounded px-3 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-100 ${
             isClosed
               ? 'border border-red-800 bg-green-900 text-green-100'
               : isSaved
-                ? 'border border-gray-800 bg-green-900 text-green-100 hover:bg-green-800'
+                ? 'border border-blue-100 bg-blue-900 text-blue-100 hover:bg-blue-800'
                 : 'border border-white bg-green-900 text-green-100 hover:bg-green-800'
           }`}
         >

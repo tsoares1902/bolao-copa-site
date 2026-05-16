@@ -40,42 +40,54 @@ export function MatchCard({
       className="matchInfo rounded-lg border border-gray-500 bg-black p-4"
       style={articleStyle}
     >
-      <div className="text-center text-sm text-gray-500">
-        <div className="location mt-3 text-center text-sm text-gray-100">
+      <div className="w-full text-center text-sm text-gray-500">
+        <div className="location mt-3 w-full text-center text-sm text-gray-100">
           <strong>{stadium?.name}</strong> - <strong>{stadium?.city}</strong>
         </div>
-        <div className="date mt-3 text-center text-sm text-gray-100">
+        <div className="date mt-3 w-full text-center text-sm text-gray-100">
           <strong>{matchDate.toLocaleDateString('pt-BR')}</strong> - <strong>{matchDate.toLocaleTimeString('pt-BR')}</strong>
         </div>
       </div>
 
-      <div className="infoScrore mt-4 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4">
-        <div className="homeTeamInfo">
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
-            <strong className="homeTeamName text-right text-gray-100 text-sm leading-none">
-              {homeTeam?.name ?? match.homeTeamId}
-            </strong>
-            <span className="homeTeamFlag text-right text-2xl leading-none">
-              <a href="" title={homeTeam?.name}>{homeTeam?.flagEmoji}</a>
-            </span>
-          </div>
+      <div className="infoScrore mt-4 space-y-3">
+        <div className="grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-2">
+          <strong className="homeTeamName w-full text-right text-sm leading-snug text-gray-100">
+            {homeTeam?.name ?? match.homeTeamId}
+          </strong>
+          <span className="text-center text-sm font-bold leading-snug text-gray-100">
+            x
+          </span>
+          <strong className="awayTeamName w-full text-left text-sm leading-snug text-gray-100">
+            {awayTeam?.name ?? match.awayTeamId}
+          </strong>
         </div>
 
-        <div className="scores flex items-center justify-center gap-2">
-          <GuessScoreInput value={homeScore} onChange={setHomeScore} />
-          <span className="font-bold leading-none text-gray-100">x</span>
-          <GuessScoreInput value={awayScore} onChange={setAwayScore} />
-        </div>
-
-        <div className="awayTeamInfo">
-          <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-2">
-            <span className="awayTeamFlag text-left text-2xl leading-none">
-              <a href="" title={awayTeam?.name}>{awayTeam?.flagEmoji}</a>
-            </span>
-            <strong className="awayTeamName text-left text-gray-100 text-sm leading-none">
-              {awayTeam?.name ?? match.awayTeamId}
-            </strong>
+        <div className="grid grid-cols-[auto_auto_auto_auto_auto] items-center justify-center gap-2">
+          <span className="homeTeamFlag mr-2 text-left text-2xl leading-none">
+            {homeTeam?.flagEmoji}
+          </span>
+          <div className="flex justify-end">
+            <GuessScoreInput
+              value={homeScore}
+              onChange={setHomeScore}
+              disabled
+              hideControls
+            />
           </div>
+          <span className="text-center text-lg font-bold leading-none text-gray-100">
+            -
+          </span>
+          <div className="flex justify-start">
+            <GuessScoreInput
+              value={awayScore}
+              onChange={setAwayScore}
+              disabled
+              hideControls
+            />
+          </div>
+          <span className="awayTeamFlag ml-2 text-right text-2xl leading-none">
+            {awayTeam?.flagEmoji}
+          </span>
         </div>
       </div>
 

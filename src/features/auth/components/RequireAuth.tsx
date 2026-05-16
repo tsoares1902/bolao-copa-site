@@ -18,7 +18,7 @@ export function RequireAuth({ children }: RequireAuthProps) {
     const isLoggedIn = Boolean(getAccessToken());
 
     if (!isLoggedIn) {
-      router.replace('/account/sign-in');
+      router.replace('/sign-in');
       return;
     }
 

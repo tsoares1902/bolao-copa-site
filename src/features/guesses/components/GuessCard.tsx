@@ -21,17 +21,17 @@ const GUESS_CARD_VISUALS: Record<
   }
 > = {
   needs_guess: {
-    articleClassName: 'matchInfo rounded-lg border border-white bg-gray-900 p-4',
+    articleClassName: 'matchInfo rounded-lg border border-green-500 p-4',
     formVariant: 'default',
     isFormDisabled: false,
   },
   has_guess: {
-    articleClassName: 'matchInfo rounded-lg border border-gray-800 bg-gray-900 p-4',
+    articleClassName: 'matchInfo rounded-lg border border-blue-500 p-4',
     formVariant: 'saved',
     isFormDisabled: false,
   },
   locked_without_guess: {
-    articleClassName: 'matchInfo rounded-lg border border-red-800 bg-gray-900 p-4',
+    articleClassName: 'matchInfo rounded-lg border border-red-800 bg-red-900 p-4',
     formVariant: 'closed',
     isFormDisabled: true,
   },
@@ -56,7 +56,7 @@ export function GuessCard({
 }: GuessCardProps) {
   const [showSavedMessage, setShowSavedMessage] = useState(false);
   const [savedMessage, setSavedMessage] = useState('Palpite salva com sucesso!');
-  const isLocked = match.status === 'Live' || match.status === 'Finalizado';
+  const isLocked = match.status === 'live' || match.status === 'finished';
   const matchDate = new Date(match.matchDate);
   const bettingDeadline = new Date(matchDate.getTime() - 60 * 60 * 1000);
   const bettingDeadlineDate = bettingDeadline.toLocaleDateString('pt-BR', {
@@ -70,23 +70,29 @@ export function GuessCard({
   });
 
   const statusConfig =
-    match.status === 'Agendado'
+    match.status === 'scheduled'
       ? {
           className: 'border-green-300 bg-green-100 text-green-900',
           icon: CiTimer,
           message: `Ativo até ${bettingDeadlineDate} as ${bettingDeadlineTime}`,
         }
-      : match.status === 'Live'
+      : match.status === 'live'
         ? {
-            className: 'border-green-300 bg-gray-300 text-gray-900',
+            className: 'border-red-300 bg-red-100 text-red-900',
             icon: MdBlock,
             message: 'Encerrado - A partida está em andamento',
           }
-        : {
-            className: 'border-red-300 bg-red-100 text-red-900',
-            icon: SlClose,
-            message: 'Encerrado - A partida foi finalizada',
-        };
+        : match.status === 'finished'
+          ? {
+              className: 'border-red-300 bg-red-100 text-red-900',
+              icon: SlClose,
+              message: 'Encerrado - A partida foi finalizada',
+            }
+          : {
+              className: 'border-green-300 bg-green-100 text-green-900',
+              icon: CiTimer,
+              message: `Ativo até ${bettingDeadlineDate} as ${bettingDeadlineTime}`,
+            };
 
   const visualState: GuessCardVisualState = guess
     ? 'has_guess'
@@ -94,6 +100,8 @@ export function GuessCard({
       ? 'locked_without_guess'
       : 'needs_guess';
   const visualConfig = GUESS_CARD_VISUALS[visualState];
+  const isFormDisabled = isLocked || visualConfig.isFormDisabled;
+  const formVariant = isLocked ? 'closed' : visualConfig.formVariant;
   const StatusIcon = statusConfig.icon;
   const articleStyle = stadium?.midia.photoUrl
     ? {
@@ -145,7 +153,7 @@ export function GuessCard({
           </div>
         </div>
         {showSavedMessage && (
-          <div className="absolute inset-0 flex w-full items-start gap-2 rounded border border-green-300 bg-green-100 px-3 py-2 text-green-900">
+          <div className="absolute inset-0 flex w-full items-start gap-2 rounded border border-blue-300 bg-blue-100 px-3 py-2 text-blue-900">
             <CiTimer className="mt-0.5 shrink-0 text-base" />
             <div className="text-sm">
               <span className="status font-bold uppercase">{savedMessage}</span>
@@ -191,8 +199,8 @@ export function GuessCard({
       <GuessForm
         matchId={match._id}
         guess={guess}
-        disabled={visualConfig.isFormDisabled}
-        variant={visualConfig.formVariant}
+        disabled={isFormDisabled}
+        variant={formVariant}
         onSaved={handleSaved}
       />
     </article>

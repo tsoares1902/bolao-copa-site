@@ -20,7 +20,7 @@ export type MatchPhase =
   | 'Semifinal'
   | 'Final';
 
-export type MatchStatus = 'Agendado' | 'Live' | 'Finalizado';
+export type MatchStatus = 'scheduled' | 'live' | 'finished';
 
 export type Match = {
   _id: string;

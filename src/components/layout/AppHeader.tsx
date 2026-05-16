@@ -38,7 +38,7 @@ export function AppHeader() {
       clearTokens();
       setIsLoggedIn(false);
       setIsMobileMenuOpen(false);
-      router.push('/account/sign-in');
+      router.push('/sign-in');
     }
   }
 
@@ -86,7 +86,7 @@ export function AppHeader() {
           {isLoggedIn ? (
             <>
               <Link
-                href="/account/profile"
+                href="/me"
                 className="flex items-center justify-center gap-2 rounded border border-gray-500 bg-black px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700"
               >
                 <FaRegUser className="text-base" />
@@ -105,7 +105,7 @@ export function AppHeader() {
           ) : (
             <>
               <Link
-                href="/account/sign-up"
+                href="/sign-up"
                 className="flex items-center justify-center gap-2 rounded border border-blue-100 bg-blue-800 px-3 py-2 text-sm font-medium text-blue-100 hover:bg-blue-600"
               >
                 <RiUserFill className="text-base" />
@@ -113,7 +113,7 @@ export function AppHeader() {
               </Link>
 
               <Link
-                href="/account/sign-in"
+                href="/sign-in"
                 className="flex items-center justify-center gap-2 rounded border border-green-100 bg-green-800 px-3 py-2 text-sm font-medium text-green-100 hover:bg-green-600"
               >
                 <IoMdExit className="text-base" />
@@ -172,7 +172,7 @@ export function AppHeader() {
             {isLoggedIn ? (
               <>
                 <Link
-                  href="/account/profile"
+                  href="/me"
                   className="flex w-full items-center justify-center gap-2 rounded border border-gray-500 bg-black px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -192,7 +192,7 @@ export function AppHeader() {
             ) : (
               <>
                 <Link
-                  href="/account/sign-up"
+                  href="/sign-up"
                   className="flex w-full items-center justify-center gap-2 rounded border border-blue-100 bg-blue-800 px-3 py-2 text-sm font-medium text-blue-100 hover:bg-blue-600"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -201,7 +201,7 @@ export function AppHeader() {
                 </Link>
 
                 <Link
-                  href="/account/sign-in"
+                  href="/sign-in"
                   className="flex w-full items-center justify-center gap-2 rounded border border-green-100 bg-green-800 px-3 py-2 text-sm font-medium text-green-100 hover:bg-green-600"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >

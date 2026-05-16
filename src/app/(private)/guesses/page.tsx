@@ -12,7 +12,7 @@ export default function GuessesPage() {
     <div className="min-h-screen bg-black">
       <div className="px-4 pt-6 md:px-6">
         <h1 className="mb-6 text-center text-2xl font-bold text-gray-300">
-          MEUS PALPITES
+          PALPITES
         </h1>
         <form className="space-y-6">
           <SearchBar

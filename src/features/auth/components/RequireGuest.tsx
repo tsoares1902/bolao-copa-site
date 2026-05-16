@@ -18,7 +18,7 @@ export function RequireGuest({ children }: RequireGuestProps) {
     const isLoggedIn = Boolean(getAccessToken());
 
     if (isLoggedIn) {
-      router.replace('/account/me');
+      router.replace('/me');
       return;
     }
 
